@@ -9,6 +9,7 @@ interface VideoPlayerProps {
 export default function VideoPlayer({ videoUrl }: VideoPlayerProps) {
 	const [isPlaying, setIsPlaying] = useState(false);
 	const [isMuted, setIsMuted] = useState(true);
+	const [isLoaded, setIsLoaded] = useState(false);
 	const [progress, setProgress] = useState(0);
 	const [currentTime, setCurrentTime] = useState(0);
 	const [duration, setDuration] = useState(0);
@@ -30,12 +31,25 @@ export default function VideoPlayer({ videoUrl }: VideoPlayerProps) {
 			setDuration(video.duration);
 		};
 
+		const canPlay = () => {
+			setIsLoaded(true);
+			// try autoplay when muted to allow autoplay in many browsers
+			if (video.muted) {
+				video.play().catch(() => {
+					/* ignore autoplay rejection */
+				});
+				setIsPlaying(true);
+			}
+		};
+
 		video.addEventListener("timeupdate", updateProgress);
 		video.addEventListener("loadedmetadata", updateDuration);
+		video.addEventListener("canplay", canPlay);
 
 		return () => {
 			video.removeEventListener("timeupdate", updateProgress);
 			video.removeEventListener("loadedmetadata", updateDuration);
+			video.removeEventListener("canplay", canPlay);
 		};
 	}, []);
 
@@ -86,11 +100,19 @@ export default function VideoPlayer({ videoUrl }: VideoPlayerProps) {
 			<video
 				ref={videoRef}
 				src={videoUrl}
-				className="w-full h-full object-contain"
+				className="w-full h-full object-contain bg-black"
 				onClick={togglePlay}
 				loop
 				playsInline
+				preload="metadata"
+				muted={isMuted}
 			/>
+
+			{!isLoaded && (
+				<div className="absolute inset-0 flex items-center justify-center">
+					<div className="w-10 h-10 border-4 border-gray-700 border-t-blue-500 rounded-full animate-spin" />
+				</div>
+			)}
 
 			{/* Play/Pause Overlay */}
 			{!isPlaying && (
