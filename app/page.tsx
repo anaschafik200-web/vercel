@@ -25,7 +25,8 @@ export const metadata: Metadata = {
 			tweet.stats.comments
 		} · 🔁 ${formatShort(tweet.stats.retweets)}`,
 		type: "video.other",
-		url: tweet.videoUrl,
+		// point to an embeddable HTML player page so chat apps (Discord) can iframe it
+		url: `/embed/${tweet.id}`,
 		siteName: "Tweet Clone",
 		images: [
 			{
@@ -39,9 +40,9 @@ export const metadata: Metadata = {
 		],
 		videos: [
 			{
-				url: tweet.videoUrl,
-				secureUrl: tweet.videoUrl,
-				type: "video/mp4",
+				url: `/embed/${tweet.id}`,
+				secureUrl: `/embed/${tweet.id}`,
+				type: "text/html",
 				width: 1280,
 				height: 720,
 			},
