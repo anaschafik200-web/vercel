@@ -9,6 +9,9 @@ export interface Tweet {
 	content: string;
 	timestamp: string;
 	videoUrl: string;
+	videoWidth: number;
+	videoHeight: number;
+	videoThumbnail: string;
 	stats: {
 		views: string;
 		comments: number;
@@ -33,6 +36,10 @@ export const tweets: Tweet[] = [
 		timestamp: "2h",
 		videoUrl:
 			"https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4",
+		videoWidth: 1280,
+		videoHeight: 720,
+		videoThumbnail:
+			"https://peach.blender.org/wp-content/uploads/title_anouncement.jpg?x11217",
 		stats: {
 			views: "1.2M",
 			comments: 234,
